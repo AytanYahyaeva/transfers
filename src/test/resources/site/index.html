@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kartdan karta köçürmə</title>
+    <style>
+        :root { --ink:#14213d; --muted:#5b6678; --line:#d5dbe5; --bg:#e9eef5; --accent:#2457d6; --ok:#12805c; --err:#b3261e; }
+        * { box-sizing: border-box; }
+        body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--ink); font-family:"Segoe UI", system-ui, sans-serif; padding:16px; }
+        main { width:100%; max-width:420px; background:#fff; border-radius:14px; padding:28px; box-shadow:0 8px 30px rgba(20,33,61,.12); }
+        h1 { font-size:1.35rem; margin:0 0 4px; }
+        p.sub { margin:0 0 22px; color:var(--muted); font-size:.95rem; }
+        label { display:block; font-weight:600; font-size:.9rem; margin:16px 0 6px; }
+        select, input { width:100%; padding:11px 12px; font-size:1rem; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+        select:focus, input:focus, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+        button { width:100%; margin-top:22px; padding:12px; font-size:1rem; font-weight:600; color:#fff; background:var(--accent); border:0; border-radius:8px; cursor:pointer; }
+        button:hover { background:#1b46b0; }
+        .msg { margin-top:16px; padding:11px 12px; border-radius:8px; font-size:.95rem; }
+        .msg[hidden] { display:none; }
+        #successMessage { background:#e3f4ec; color:var(--ok); }
+        #errorMessage { background:#fbe9e7; color:var(--err); }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Kartdan karta köçürmə</h1>
+    <p class="sub">Göndərən və alan kartı seçin, məbləği yazın.</p>
+
+    <label for="fromCard">Göndərən kart</label>
+    <select id="fromCard">
+        <option value="" selected disabled>Kart seçin</option>
+        <option value="visa">Visa 4169 **** 1234 (AZN)</option>
+        <option value="master">Mastercard 5239 **** 5678 (AZN)</option>
+    </select>
+
+    <label for="toCard">Alan kart</label>
+    <select id="toCard">
+        <option value="" selected disabled>Kart seçin</option>
+        <option value="visa">Visa 4169 **** 1234 (AZN)</option>
+        <option value="master">Mastercard 5239 **** 5678 (AZN)</option>
+    </select>
+
+    <label for="amount">Məbləğ (AZN)</label>
+    <input id="amount" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off">
+
+    <button id="transferBtn" type="button">Köçür</button>
+
+    <div id="successMessage" class="msg" role="status" hidden>Köçürmə uğurla tamamlandı</div>
+    <div id="errorMessage" class="msg" role="alert" hidden></div>
+</main>
+
+<script>
+    const $ = id => document.getElementById(id);
+    const success = $("successMessage"), error = $("errorMessage");
+
+    function showError(text) {
+        success.hidden = true;
+        error.textContent = text;
+        error.hidden = false;
+    }
+
+    $("transferBtn").addEventListener("click", () => {
+        const from = $("fromCard").value, to = $("toCard").value;
+        const amount = parseFloat($("amount").value.replace(",", "."));
+
+        if (!from || !to) return showError("Göndərən və alan kartı seçin");
+        if (from === to) return showError("Göndərən və alan kart eyni ola bilməz");
+        if (!(amount > 0)) return showError("Məbləği düzgün daxil edin");
+
+        error.hidden = true;
+        success.hidden = false;
+    });
+</script>
+</body>
+</html>
